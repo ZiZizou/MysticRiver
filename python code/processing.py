@@ -3,18 +3,18 @@ from sodapy import Socrata
 import os
 
 path = './data.csv'
-
+results_df = pd.DataFrame(columns = [])
 
 def source_data(results):
     print('please wait while we source the data')
     client = Socrata("data.calgary.ca", None)
     results = client.get("5fdg-ifgr", limit=results)
     results_df = pd.DataFrame.from_records(results)
-    results_df.to_csv(path)
+    return results_df.to_csv(path)
 
 def get_data(selection, update, results):
     if(update):
-        source_data(results)
+        results_df = source_data(results)
     
     try:
         results_df = pd.read_csv(path)
