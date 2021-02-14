@@ -4,15 +4,23 @@ import os
 
 path = './data.csv'
 
+
+def source_data(results):
+    print('please wait while we source the data')
+    client = Socrata("data.calgary.ca", None)
+    results = client.get("5fdg-ifgr", limit=results)
+    results_df = pd.DataFrame.from_records(results)
+    results_df.to_csv(path)
+
 def get_data(selection, update, results):
-    if(update and os.path.exists(path)):
-        print('please wait while we source the data')
-        client = Socrata("data.calgary.ca", None)
-        results = client.get("5fdg-ifgr", limit=results)
-        results_df = pd.DataFrame.from_records(results)
-        results_df.to_csv(path)
+    if(update):
+        source_data(results)
     
-    results_df = pd.read_csv(path)
+    try:
+        results_df = pd.read_csv(path)
+    except FileNotFoundError:
+        source_data(results)
+    
 
     results_df = results_df.loc[results_df['station_name']==selection]
     results_df = results_df.loc[results_df['level']!='NA']
