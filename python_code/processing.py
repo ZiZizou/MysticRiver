@@ -3,24 +3,17 @@ from sodapy import Socrata
 import os
 
 path = './data.csv'
-results_df = pd.DataFrame(columns = [])
-
-def source_data(results):
-    print('please wait while we source the data')
-    client = Socrata("data.calgary.ca", None)
-    results = client.get("5fdg-ifgr", limit=results)
-    results_df = pd.DataFrame.from_records(results)
-    return results_df.to_csv(path)
 
 def get_data(selection, update, results):
-    if(update):
-        results_df = source_data(results)
+    if(update or (not os.path.exists(path))):
+        print(update and os.path.exists(path))
+        print('please wait while we source the data')
+        client = Socrata("data.calgary.ca", None)
+        results = client.get("5fdg-ifgr", limit=results)
+        results_df = pd.DataFrame.from_records(results)
+        results_df.to_csv(path)
     
-    try:
-        results_df = pd.read_csv(path)
-    except FileNotFoundError:
-        source_data(results)
-    
+    results_df = pd.read_csv(path)
 
     results_df = results_df.loc[results_df['station_name']==selection]
     results_df = results_df.loc[results_df['level']!='NA']
