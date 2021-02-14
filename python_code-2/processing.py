@@ -6,7 +6,7 @@ path = './data.csv'
 
 def get_data(selection, update, results):
     if(update or (not os.path.exists(path))):
-        print(update and os.path.exists(path))
+        print(update and (not os.path.exists(path)))
         print('please wait while we source the data')
         client = Socrata("data.calgary.ca", None)
         results = client.get("5fdg-ifgr", limit=results)

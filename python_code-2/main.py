@@ -49,7 +49,7 @@ def range_gen(start_month, stop_month, start_day, stop_day, year = 2021):
 #-----------------------------------------------------------
 #Main Code
 
-def plot(start_d, stop_d, start_m, stop_m, update, data_plot_cond, selection,results = 2000000):
+def plot(start_d, stop_d, start_m, stop_m, update, data_plot_cond, selection,results = 200000):
     data_df = processing.get_data(selection, update, results)
     if(update):
         update = False
